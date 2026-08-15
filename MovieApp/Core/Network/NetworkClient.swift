@@ -59,7 +59,10 @@ final class NetworkClient {
 
         } catch let error as APIError {
             throw error
-
+        } catch is CancellationError {
+            throw CancellationError()
+        } catch let urlError as URLError where urlError.code == .cancelled {
+            throw CancellationError()
         } catch {
             throw APIError.networkError(error)
         }

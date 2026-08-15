@@ -12,8 +12,8 @@ import Observation
 @Observable
 final class HomeViewModel {
 
-    private let repository: MovieRepository
-//    private let favoritesStore: FavoritesStore
+    let repository: MovieRepository
+    let favoritesStore: FavoritesStoreProtocol
 
     private var searchTask: Task<Void, Never>?
 
@@ -30,17 +30,17 @@ final class HomeViewModel {
     var errorMessage: String?
 
     init(
-        repository: MovieRepository,
-//        favoritesStore: FavoritesStore
+        repository: MovieRepository = DefaultMovieRepository(),
+        favoritesStore: FavoritesStoreProtocol
     ) {
         self.repository = repository
-//        self.favoritesStore = favoritesStore
+        self.favoritesStore = favoritesStore
     }
 
     func loadPopularMovies() async {
         await load { [weak self] in
-            guard let self = self else { return nil}
-            return try await repository.popularMovies()
+            guard let self = self else { return nil }
+            return try await self.repository.popularMovies()
         }
     }
 
@@ -55,7 +55,6 @@ final class HomeViewModel {
     }
 
     func search() async {
-
         let query = searchText
             .trimmingCharacters(
                 in: .whitespacesAndNewlines
@@ -66,52 +65,56 @@ final class HomeViewModel {
             return
         }
 
-        await load {[weak self] in
-            guard let self else {return nil}
-            return try await repository.searchMovies(
+        await load { [weak self] in
+            guard let self = self else { return nil }
+            return try await self.repository.searchMovies(
                 query: query
             )
         }
     }
 
-//    func isFavorite(
-//        _ movie: Movie
-//    ) -> Bool {
-//        favoritesStore.isFavorite(movie.id)
-//    }
-//
-//    func toggleFavorite(
-//        _ movie: Movie
-//    ) {
-//        favoritesStore.toggleFavorite(movie.id)
-//    }
+    func isFavorite(
+        _ movie: Movie
+    ) -> Bool {
+        favoritesStore.isFavorite(movie.id)
+    }
+
+    func toggleFavorite(
+        _ movie: Movie
+    ) {
+        favoritesStore.toggleFavorite(movie.id)
+    }
 
     private func load(
         operation: () async throws -> [Movie]?
     ) async {
-
         isLoading = true
         errorMessage = nil
 
         defer {
-            isLoading = false
+            if !Task.isCancelled {
+                isLoading = false
+            }
         }
 
         do {
-            movies = try await operation()
+            let result = try await operation()
+            guard !Task.isCancelled else { return }
+            movies = result
+        } catch is CancellationError {
+            // Request was cancelled (e.g. user typed next character), ignore silently
         } catch {
+            guard !Task.isCancelled else { return }
             errorMessage = error.localizedDescription
         }
     }
 
     private func scheduleSearch() {
-
         searchTask?.cancel()
 
         searchTask = Task { [weak self] in
-
             try? await Task.sleep(
-                for: .milliseconds(400)
+                for: .milliseconds(350)
             )
 
             guard !Task.isCancelled else {
@@ -121,8 +124,4 @@ final class HomeViewModel {
             await self?.search()
         }
     }
-
-//    deinit {
-//        searchTask?.cancel()
-//    }
 }

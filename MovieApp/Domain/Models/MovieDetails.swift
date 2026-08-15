@@ -15,6 +15,7 @@ struct MovieDetails: Identifiable, Codable, Hashable {
     let backdropPath: String?
     let voteAverage: Double
     let runtime: Int?
+    let releaseDate: String?
     let genres: [Genre]
     let credits: Credits?
     let videos: Videos?
@@ -27,6 +28,7 @@ struct MovieDetails: Identifiable, Codable, Hashable {
         case backdropPath = "backdrop_path"
         case voteAverage = "vote_average"
         case runtime
+        case releaseDate = "release_date"
         case genres
         case credits
         case videos
@@ -37,7 +39,26 @@ struct MovieDetails: Identifiable, Codable, Hashable {
     }
 
     var trailer: Video? {
-        videos?.results.first(where: \.isYouTubeTrailer)
+        // Look for official YouTube trailer first, then any YouTube trailer, then any YouTube video
+        if let officialTrailer = videos?.results.first(where: { $0.isYouTubeTrailer && ($0.official ?? false) }) {
+            return officialTrailer
+        }
+        if let anyTrailer = videos?.results.first(where: \.isYouTubeTrailer) {
+            return anyTrailer
+        }
+        return videos?.results.first(where: { $0.site.caseInsensitiveCompare("YouTube") == .orderedSame })
+    }
+
+    var formattedRuntime: String? {
+        Formatters.formatRuntime(runtime)
+    }
+
+    var formattedRating: String {
+        Formatters.formatRating(voteAverage)
+    }
+
+    var formattedReleaseYear: String? {
+        Formatters.formatReleaseYear(releaseDate)
     }
 }
 

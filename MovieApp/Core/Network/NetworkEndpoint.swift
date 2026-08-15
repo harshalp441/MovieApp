@@ -8,14 +8,13 @@
 import Foundation
 
 enum NetworkEndpoint {
+    case popular
+    case search(query: String)
+    case details(id: Int)
     
     var APIKey: String {
         "0a45c058ffff0ff4fa6c3a9c73bd38d9"
     }
-
-    case popular
-    case search(query: String)
-    case details(id: Int)
 
     var baseURL: String {
         "https://api.themoviedb.org"

@@ -15,8 +15,26 @@ struct Video: Identifiable, Codable, Hashable {
     let type: String
     let official: Bool?
 
+    var isTrailer: Bool {
+        type.caseInsensitiveCompare("Trailer") == .orderedSame ||
+        type.caseInsensitiveCompare("Teaser") == .orderedSame
+    }
+
     var isYouTubeTrailer: Bool {
-        site == "YouTube" &&
-        type == "Trailer"
+        site.caseInsensitiveCompare("YouTube") == .orderedSame && isTrailer
+    }
+
+    var youtubeURL: URL? {
+        guard site.caseInsensitiveCompare("YouTube") == .orderedSame, !key.isEmpty else {
+            return nil
+        }
+        return URL(string: "https://www.youtube.com/watch?v=\(key)")
+    }
+
+    var youtubeEmbedURL: URL? {
+        guard site.caseInsensitiveCompare("YouTube") == .orderedSame, !key.isEmpty else {
+            return nil
+        }
+        return URL(string: "https://www.youtube-nocookie.com/embed/\(key)?playsinline=1&rel=0&modestbranding=1&autoplay=0")
     }
 }

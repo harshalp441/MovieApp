@@ -9,15 +9,23 @@ import SwiftUI
 
 struct HomeView: View {
 
-    @State private var viewModel: HomeViewModel = HomeViewModel(repository: DefaultMovieRepository())
+    @State private var viewModel: HomeViewModel
 
+    init(viewModel: HomeViewModel? = nil) {
+        let defaultStore = DefaultFavoritesStore()
+        _viewModel = State(
+            initialValue: viewModel ?? HomeViewModel(
+                repository: DefaultMovieRepository(),
+                favoritesStore: defaultStore
+            )
+        )
+    }
 
     var body: some View {
-
         NavigationStack {
-
             content
                 .navigationTitle("Movies")
+                .navigationBarTitleDisplayMode(.large)
                 .searchable(
                     text: $viewModel.searchText,
                     prompt: "Search movies"
@@ -56,41 +64,37 @@ struct HomeView: View {
 
     @ViewBuilder
     private var content: some View {
-
-        if viewModel.isLoading &&
-            (viewModel.movies?.isEmpty ?? true) {
-
-            ProgressView()
-
-        } else if (viewModel.movies?.isEmpty ?? true) {
-
-            ContentUnavailableView(
-                "No Movies",
-                systemImage: "film",
-                description:
-                    Text("No movies found.")
-            )
-
+        if viewModel.isLoading && (viewModel.movies?.isEmpty ?? true) {
+            List(0..<4, id: \.self) { _ in
+                MovieRowSkeleton()
+            }
+            .listStyle(.plain)
+        } else if let movies = viewModel.movies, movies.isEmpty {
+            if !viewModel.searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                ContentUnavailableView.search(text: viewModel.searchText)
+            } else {
+                ContentUnavailableView(
+                    "No Movies",
+                    systemImage: "film",
+                    description: Text("No movies available right now.")
+                )
+            }
         } else {
-
             List(viewModel.movies ?? []) { movie in
-
                 NavigationLink {
-                    EmptyView()
-//                    MovieDetailView(
-//                        viewModel:
-//                            makeDetailViewModel(movie)
-//                    )
+                    DetailView(
+                        viewModel: DetailViewModel(
+                            movie: movie,
+                            repository: viewModel.repository,
+                            favoritesStore: viewModel.favoritesStore
+                        )
+                    )
                 } label: {
-
                     MovieRow(
                         movie: movie,
-                        isFavorite:
-                           false,
+                        isFavorite: viewModel.isFavorite(movie),
                         onFavoriteTap: {
-//                            viewModel.toggleFavorite(
-//                                movie
-//                            )
+                            viewModel.toggleFavorite(movie)
                         }
                     )
                 }
