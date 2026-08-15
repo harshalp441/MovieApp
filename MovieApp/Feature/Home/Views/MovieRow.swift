@@ -12,20 +12,20 @@ struct MovieRow: View {
     let movie: Movie
     let isFavorite: Bool
     let onFavoriteTap: () -> Void
-    
+
     var body: some View {
         HStack(spacing: 14) {
             posterContent
                 .frame(width: 75, height: 110)
                 .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                 .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
-            
+
             VStack(alignment: .leading, spacing: 6) {
                 Text(movie.title)
                     .font(.headline)
                     .foregroundColor(.primary)
                     .lineLimit(2)
-                
+
                 HStack(spacing: 3) {
                     Image(systemName: "star.fill")
                         .foregroundColor(.yellow)
@@ -34,8 +34,7 @@ struct MovieRow: View {
                         .font(.subheadline.weight(.semibold))
                         .foregroundColor(.primary)
                 }
-                
-                // Release Year
+
                 if let year = movie.formattedReleaseYear {
                     HStack(spacing: 3) {
                         Image(systemName: "calendar")
@@ -48,9 +47,9 @@ struct MovieRow: View {
                 }
                 Spacer(minLength: 0)
             }
-            
+
             Spacer()
-            
+
             Button(action: onFavoriteTap) {
                 Image(systemName: isFavorite ? "heart.fill" : "heart")
                     .font(.title3)
@@ -62,7 +61,7 @@ struct MovieRow: View {
         }
         .padding(.vertical, 4)
     }
-    
+
     @ViewBuilder
     private var posterContent: some View {
         if let url = TMDBImageHelper.poster(path: movie.posterPath, width: 185) {

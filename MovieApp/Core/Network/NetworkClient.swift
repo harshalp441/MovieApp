@@ -12,10 +12,7 @@ final class NetworkClient {
     static func request<T: Decodable>(
         _ endpoint: NetworkEndpoint
     ) async throws -> T {
-
-        guard var components = URLComponents(
-            string: endpoint.baseURL
-        ) else {
+        guard var components = URLComponents(string: endpoint.baseURL) else {
             throw APIError.invalidURL
         }
 
@@ -30,15 +27,8 @@ final class NetworkClient {
 
         request.httpMethod = endpoint.method
 
-        request.setValue(
-            "application/json",
-            forHTTPHeaderField: "Accept"
-        )
-
         do {
-            let (data, response) = try await URLSession.shared.data(
-                for: request
-            )
+            let (data, response) = try await URLSession.shared.data(for: request)
 
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw APIError.invalidResponse
@@ -49,10 +39,7 @@ final class NetworkClient {
             }
 
             do {
-                return try JSONDecoder().decode(
-                    T.self,
-                    from: data
-                )
+                return try JSONDecoder().decode(T.self, from: data)
             } catch {
                 throw APIError.decodingError(error)
             }
@@ -60,8 +47,10 @@ final class NetworkClient {
         } catch let error as APIError {
             throw error
         } catch is CancellationError {
+            // Propagate Swift Task cancellation
             throw CancellationError()
         } catch let urlError as URLError where urlError.code == .cancelled {
+            // Normalize URLSession cancellation to Swift CancellationError
             throw CancellationError()
         } catch {
             throw APIError.networkError(error)

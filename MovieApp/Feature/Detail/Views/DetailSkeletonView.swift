@@ -13,14 +13,14 @@ struct DetailSkeletonView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
-            // 1. Hero Player Placeholder (Card-specific shimmer)
+            // Hero Player Placeholder
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(Color(.systemGray5))
                 .aspectRatio(16 / 9, contentMode: .fit)
                 .shimmering()
                 .padding(.horizontal)
 
-            // 2. Header Info (Card-specific shimmer)
+            // Header Info
             VStack(alignment: .leading, spacing: 12) {
                 if let title = initialMovie?.title {
                     Text(title)
@@ -31,7 +31,7 @@ struct DetailSkeletonView: View {
                         .rectangleShimmer(width: 240, height: 28, cornerRadius: 4)
                 }
 
-                // Badges with inline logos (Rating, Runtime, Year) - Rectangular Shimmers
+                // Badges with inline logos (Rating, Runtime, Year)
                 HStack(spacing: 12) {
                     RoundedRectangle(cornerRadius: 12)
                         .fill(Color(.systemGray5))
@@ -45,7 +45,7 @@ struct DetailSkeletonView: View {
                         .rectangleShimmer(width: 50, height: 22, cornerRadius: 4)
                 }
 
-                // Genre Items - Rectangular Shimmers (Flow Layout)
+                // Genre Items
                 FlowLayout(horizontalSpacing: 8, verticalSpacing: 8) {
                     ForEach(0..<3, id: \.self) { _ in
                         Capsule()
@@ -57,7 +57,7 @@ struct DetailSkeletonView: View {
             }
             .padding(.horizontal)
 
-            // 3. Storyline Section (Card-specific shimmer)
+            // Storyline Section
             VStack(alignment: .leading, spacing: 10) {
                 Text("Storyline")
                     .font(.headline)
@@ -83,7 +83,7 @@ struct DetailSkeletonView: View {
             }
             .padding(.horizontal)
 
-            // 4. Top Cast Section (Fixed 3 items with card-specific shimmer)
+            // Top Cast Section
             VStack(alignment: .leading, spacing: 12) {
                 Text("Top Cast")
                     .font(.headline)

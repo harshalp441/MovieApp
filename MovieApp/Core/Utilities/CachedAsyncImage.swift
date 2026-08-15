@@ -9,9 +9,9 @@ import SwiftUI
 
 struct CachedAsyncImage<Content: View>: View {
 
-    let url: URL?
-    let cache: ImageCacheProtocol
-    @ViewBuilder let content: (AsyncImagePhase) -> Content
+    private let url: URL?
+    private let cache: ImageCacheProtocol
+    @ViewBuilder private let content: (AsyncImagePhase) -> Content
 
     @State private var phase: AsyncImagePhase
 
@@ -24,7 +24,7 @@ struct CachedAsyncImage<Content: View>: View {
         self.cache = cache
         self.content = content
 
-        // Synchronously check cache on initialization for 0ms frame-0 rendering
+        // Synchronous cache check on init prevents 1-frame blank/shimmer flash
         if let url = url, let cachedImage = cache[url] {
             _phase = State(initialValue: .success(Image(uiImage: cachedImage)))
         } else {
@@ -45,7 +45,6 @@ struct CachedAsyncImage<Content: View>: View {
             return
         }
 
-        // Return immediately if already cached
         if let cachedImage = cache[url] {
             phase = .success(Image(uiImage: cachedImage))
             return
@@ -62,7 +61,6 @@ struct CachedAsyncImage<Content: View>: View {
                 return
             }
 
-            // Store in memory cache
             cache[url] = uiImage
 
             guard !Task.isCancelled else { return }
@@ -70,7 +68,7 @@ struct CachedAsyncImage<Content: View>: View {
                 phase = .success(Image(uiImage: uiImage))
             }
         } catch is CancellationError {
-            // Task cancelled, ignore silently
+            // Task cancelled silently
         } catch {
             guard !Task.isCancelled else { return }
             phase = .failure(error)

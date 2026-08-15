@@ -39,7 +39,7 @@ struct MovieDetails: Identifiable, Codable, Hashable {
     }
 
     var trailer: Video? {
-        // Look for official YouTube trailer first, then any YouTube trailer, then any YouTube video
+        // Prefer official YouTube trailer, then any trailer, then any YouTube video
         if let officialTrailer = videos?.results.first(where: { $0.isYouTubeTrailer && ($0.official ?? false) }) {
             return officialTrailer
         }

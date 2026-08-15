@@ -11,22 +11,18 @@ struct MovieRowSkeleton: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            // Poster placeholder with fixed size
             RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .fill(Color(.systemGray5))
                 .frame(width: 75, height: 110)
                 .shimmering()
 
-            // Content placeholder with fixed sizes
             VStack(alignment: .leading, spacing: 8) {
-                // Title lines (Rectangular shimmers)
                 EmptyView()
                     .rectangleShimmer(height: 16, cornerRadius: 4)
 
                 EmptyView()
                     .rectangleShimmer(width: 130, height: 16, cornerRadius: 4)
 
-                // Rating & Year Badges with inline icons (Rectangular shimmers)
                 HStack(spacing: 12) {
                     EmptyView()
                         .rectangleShimmer(width: 45, height: 14, cornerRadius: 4)
@@ -36,7 +32,6 @@ struct MovieRowSkeleton: View {
                 }
                 .padding(.top, 2)
 
-                // Overview snippet lines (Rectangular shimmers)
                 EmptyView()
                     .rectangleShimmer(height: 12, cornerRadius: 4, color: Color(.systemGray6))
 
@@ -48,7 +43,6 @@ struct MovieRowSkeleton: View {
 
             Spacer()
 
-            // Favorite Icon placeholder
             Circle()
                 .fill(Color(.systemGray5))
                 .frame(width: 22, height: 22)

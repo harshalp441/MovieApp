@@ -8,8 +8,6 @@
 import SwiftUI
 import WebKit
 
-// MARK: - WKWebView YouTube Embed
-
 struct YouTubeWebView: UIViewRepresentable {
 
     let videoKey: String
@@ -81,7 +79,7 @@ struct YouTubeWebView: UIViewRepresentable {
         }
 
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            // Fallback timeout to ensure shimmer dismisses even if iframe script handler isn't reached
+            // Fallback timeout to dismiss shimmer if iframe script handler isn't reached
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in
                 guard let self = self, !self.hasLoaded else { return }
                 self.hasLoaded = true

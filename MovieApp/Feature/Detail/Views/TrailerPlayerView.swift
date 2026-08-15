@@ -73,7 +73,7 @@ struct TrailerPlayerView: View {
                 placeholderBackground
             }
 
-            // Dark gradient overlay for contrast
+            // Dark gradient overlay for text readability
             LinearGradient(
                 colors: [.black.opacity(0.1), .black.opacity(0.5)],
                 startPoint: .top,

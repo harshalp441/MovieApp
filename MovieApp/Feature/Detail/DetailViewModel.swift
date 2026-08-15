@@ -14,8 +14,8 @@ final class DetailViewModel {
 
     let movieId: Int
     let initialMovie: Movie?
-    private let repository: MovieRepository
-    private let favoritesStore: FavoritesStoreProtocol
+    let repository: MovieRepository
+    let favoritesStore: FavoritesStoreProtocol
 
     private(set) var movieDetails: MovieDetails?
     private(set) var isLoading: Bool = false
@@ -71,7 +71,7 @@ final class DetailViewModel {
             guard !Task.isCancelled else { return }
             self.movieDetails = details
         } catch is CancellationError {
-            // Screen dismissed or request cancelled, ignore silently
+            // Dismissed or cancelled silently
         } catch {
             guard !Task.isCancelled else { return }
             self.errorMessage = error.localizedDescription

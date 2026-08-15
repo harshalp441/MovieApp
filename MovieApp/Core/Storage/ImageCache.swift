@@ -21,9 +21,8 @@ final class ImageCache: ImageCacheProtocol {
 
     private let cache: NSCache<NSURL, UIImage> = {
         let cache = NSCache<NSURL, UIImage>()
-        // Store up to 150 decoded images in memory
+        // Store up to 150 decoded images, capped at ~80MB memory
         cache.countLimit = 150
-        // Cap maximum memory usage at ~80 MB
         cache.totalCostLimit = 80 * 1024 * 1024
         return cache
     }()
@@ -31,7 +30,7 @@ final class ImageCache: ImageCacheProtocol {
     private var memoryWarningObserver: NSObjectProtocol?
 
     init() {
-        // Automatically purge all in-memory images when system is under memory pressure
+        // Automatically flush in-memory images under system memory pressure
         memoryWarningObserver = NotificationCenter.default.addObserver(
             forName: UIApplication.didReceiveMemoryWarningNotification,
             object: nil,
@@ -52,7 +51,6 @@ final class ImageCache: ImageCacheProtocol {
     }
 
     func insertImage(_ image: UIImage, for url: URL) {
-        // Estimate byte cost based on image dimensions (width * height * 4 bytes per pixel)
         let cost = Int(image.size.width * image.size.height * image.scale * image.scale * 4)
         cache.setObject(image, forKey: url as NSURL, cost: cost)
     }

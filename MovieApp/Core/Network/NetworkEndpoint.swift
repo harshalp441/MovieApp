@@ -1,5 +1,5 @@
 //
-//  EndPoint.swift
+//  NetworkEndpoint.swift
 //  MovieApp
 //
 //  Created by Harshal Patankar on 15/08/26.
@@ -11,7 +11,7 @@ enum NetworkEndpoint {
     case popular
     case search(query: String)
     case details(id: Int)
-    
+
     var APIKey: String {
         "0a45c058ffff0ff4fa6c3a9c73bd38d9"
     }
@@ -24,10 +24,8 @@ enum NetworkEndpoint {
         switch self {
         case .popular:
             return "/3/movie/popular"
-
         case .search:
             return "/3/search/movie"
-
         case .details(let id):
             return "/3/movie/\(id)"
         }
@@ -39,38 +37,19 @@ enum NetworkEndpoint {
 
     var queryItems: [URLQueryItem] {
         switch self {
-
         case .popular:
             return [
-                URLQueryItem(
-                    name: "api_key",
-                    value: APIKey
-                )
+                URLQueryItem(name: "api_key", value: APIKey)
             ]
-
         case .search(let query):
             return [
-                URLQueryItem(
-                    name: "query",
-                    value: query
-                ),
-                URLQueryItem(
-                    name: "api_key",
-                    value: APIKey
-                )
-                
+                URLQueryItem(name: "query", value: query),
+                URLQueryItem(name: "api_key", value: APIKey)
             ]
-
         case .details:
             return [
-                URLQueryItem(
-                    name: "append_to_response",
-                    value: "credits,videos"
-                ),
-                URLQueryItem(
-                    name: "api_key",
-                    value: APIKey
-                )
+                URLQueryItem(name: "append_to_response", value: "credits,videos"),
+                URLQueryItem(name: "api_key", value: APIKey)
             ]
         }
     }

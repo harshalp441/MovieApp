@@ -7,8 +7,7 @@
 
 import SwiftUI
 
-/// A custom SwiftUI layout that arranges views in a horizontal flow,
-/// wrapping items to the next line when they exceed the available container width.
+/// Arranges subviews in a horizontal flow, wrapping to the next line when width is exceeded.
 struct FlowLayout: Layout {
 
     var horizontalSpacing: CGFloat = 8
@@ -23,7 +22,7 @@ struct FlowLayout: Layout {
         for subview in subviews {
             let size = subview.sizeThatFits(.unspecified)
             if currentX + size.width > maxWidth, currentX > 0 {
-                // Wrap to next line
+                // Wrap to next row
                 currentX = 0
                 currentY += lineHeight + verticalSpacing
                 lineHeight = 0
@@ -43,7 +42,7 @@ struct FlowLayout: Layout {
         for subview in subviews {
             let size = subview.sizeThatFits(.unspecified)
             if currentX + size.width > bounds.maxX, currentX > bounds.minX {
-                // Wrap to next line
+                // Wrap to next row
                 currentX = bounds.minX
                 currentY += lineHeight + verticalSpacing
                 lineHeight = 0

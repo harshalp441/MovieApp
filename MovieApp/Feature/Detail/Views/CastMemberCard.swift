@@ -8,23 +8,23 @@
 import SwiftUI
 
 struct CastMemberCard: View {
-    
+
     let member: CastMember
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             imageContent
                 .frame(width: 100, height: 130)
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
-            
+
             VStack(alignment: .leading, spacing: 2) {
                 Text(member.name)
                     .font(.caption.weight(.semibold))
                     .foregroundColor(.primary)
                     .lineLimit(2)
                     .multilineTextAlignment(.leading)
-                
+
                 if let character = member.character, !character.isEmpty {
                     Text(character)
                         .font(.caption2)
@@ -37,7 +37,7 @@ struct CastMemberCard: View {
         }
         .frame(width: 100, alignment: .top)
     }
-    
+
     @ViewBuilder
     private var imageContent: some View {
         if let url = TMDBImageHelper.profile(path: member.profilePath, width: 185) {
@@ -61,7 +61,7 @@ struct CastMemberCard: View {
             placeholderAvatar
         }
     }
-    
+
     private var placeholderAvatar: some View {
         RoundedRectangle(cornerRadius: 12, style: .continuous)
             .fill(Color(.secondarySystemBackground))

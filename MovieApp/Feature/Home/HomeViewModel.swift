@@ -26,7 +26,6 @@ final class HomeViewModel {
     }
 
     private(set) var isLoading = false
-
     var errorMessage: String?
 
     init(
@@ -45,9 +44,7 @@ final class HomeViewModel {
     }
 
     func refresh() async {
-        if searchText.trimmingCharacters(
-            in: .whitespacesAndNewlines
-        ).isEmpty {
+        if searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             await loadPopularMovies()
         } else {
             await search()
@@ -55,10 +52,7 @@ final class HomeViewModel {
     }
 
     func search() async {
-        let query = searchText
-            .trimmingCharacters(
-                in: .whitespacesAndNewlines
-            )
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
 
         guard !query.isEmpty else {
             await loadPopularMovies()
@@ -67,21 +61,15 @@ final class HomeViewModel {
 
         await load { [weak self] in
             guard let self = self else { return nil }
-            return try await self.repository.searchMovies(
-                query: query
-            )
+            return try await self.repository.searchMovies(query: query)
         }
     }
 
-    func isFavorite(
-        _ movie: Movie
-    ) -> Bool {
+    func isFavorite(_ movie: Movie) -> Bool {
         favoritesStore.isFavorite(movie.id)
     }
 
-    func toggleFavorite(
-        _ movie: Movie
-    ) {
+    func toggleFavorite(_ movie: Movie) {
         favoritesStore.toggleFavorite(movie.id)
     }
 
@@ -102,7 +90,7 @@ final class HomeViewModel {
             guard !Task.isCancelled else { return }
             movies = result
         } catch is CancellationError {
-            // Request was cancelled (e.g. user typed next character), ignore silently
+            // Cancelled silently when user continues typing
         } catch {
             guard !Task.isCancelled else { return }
             errorMessage = error.localizedDescription
@@ -113,13 +101,9 @@ final class HomeViewModel {
         searchTask?.cancel()
 
         searchTask = Task { [weak self] in
-            try? await Task.sleep(
-                for: .milliseconds(350)
-            )
+            try? await Task.sleep(for: .milliseconds(350))
 
-            guard !Task.isCancelled else {
-                return
-            }
+            guard !Task.isCancelled else { return }
 
             await self?.search()
         }

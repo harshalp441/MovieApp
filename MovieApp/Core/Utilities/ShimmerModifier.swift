@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Hardware-accelerated linear shimmer using relative UnitPoint coordinates to prevent scroll hitching.
 struct ShimmerModifier: ViewModifier {
 
     let duration: Double
@@ -76,7 +77,6 @@ extension View {
         modifier(ShimmerModifier(duration: duration))
     }
 
-    /// Renders a rectangular shimmer placeholder with subtle continuous corner radius for text and metadata badges
     func rectangleShimmer(
         width: CGFloat? = nil,
         height: CGFloat = 16,

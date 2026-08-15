@@ -16,21 +16,20 @@ struct DetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 if let details = viewModel.movieDetails {
-                    // 1. Trailer / Backdrop Hero Player
+                    // Hero Trailer / Backdrop
                     TrailerPlayerView(
                         video: details.trailer,
                         backdropPath: details.backdropPath ?? details.posterPath
                     )
                     .padding(.horizontal)
 
-                    // 2. Movie Header Info (Title, Year, Duration, Rating)
+                    // Header Info
                     VStack(alignment: .leading, spacing: 12) {
                         Text(details.title)
                             .font(.title.weight(.bold))
                             .foregroundColor(.primary)
 
                         HStack(spacing: 16) {
-                            // Rating Badge
                             HStack(spacing: 4) {
                                 Image(systemName: "star.fill")
                                     .foregroundColor(.yellow)
@@ -46,7 +45,6 @@ struct DetailView: View {
                                     .fill(Color.yellow.opacity(0.15))
                             )
 
-                            // Duration Badge
                             if let runtime = details.formattedRuntime {
                                 HStack(spacing: 4) {
                                     Image(systemName: "clock")
@@ -58,7 +56,6 @@ struct DetailView: View {
                                 }
                             }
 
-                            // Release Year
                             if let year = details.formattedReleaseYear {
                                 HStack(spacing: 4) {
                                     Image(systemName: "calendar")
@@ -71,7 +68,7 @@ struct DetailView: View {
                             }
                         }
 
-                        // Genres (Wrapping Flow Layout)
+                        // Genres
                         if !details.genres.isEmpty {
                             FlowLayout(horizontalSpacing: 8, verticalSpacing: 8) {
                                 ForEach(details.genres) { genre in
@@ -82,7 +79,7 @@ struct DetailView: View {
                     }
                     .padding(.horizontal)
 
-                    // 3. Overview / Plot Section
+                    // Storyline
                     if let overview = details.overview, !overview.isEmpty {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Storyline")
@@ -97,7 +94,7 @@ struct DetailView: View {
                         .padding(.horizontal)
                     }
 
-                    // 4. Cast Section
+                    // Cast
                     if !details.cast.isEmpty {
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Top Cast")
@@ -148,6 +145,7 @@ struct DetailView: View {
         .onScrollGeometryChange(for: CGFloat.self) { geometry in
             geometry.contentOffset.y
         } action: { _, offset in
+            // Reveal navigation title when in-body title scrolls past top navigation bar
             let shouldShow = offset > 160
             if shouldShow != showNavTitle {
                 withAnimation(.easeInOut(duration: 0.2)) {
