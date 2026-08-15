@@ -10,6 +10,7 @@ import SwiftUI
 struct DetailView: View {
 
     @State var viewModel: DetailViewModel
+    @State private var showNavTitle = false
 
     var body: some View {
         ScrollView {
@@ -146,9 +147,29 @@ struct DetailView: View {
             }
             .padding(.vertical)
         }
-        .navigationTitle(viewModel.title)
+        .onScrollGeometryChange(for: CGFloat.self) { geometry in
+            geometry.contentOffset.y
+        } action: { _, offset in
+            let shouldShow = offset > 160
+            if shouldShow != showNavTitle {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    showNavTitle = shouldShow
+                }
+            }
+        }
+        .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(viewModel.title)
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                    .lineLimit(1)
+                    .opacity(showNavTitle ? 1.0 : 0.0)
+                    .offset(y: showNavTitle ? 0 : 6)
+                    .animation(.easeInOut(duration: 0.2), value: showNavTitle)
+            }
+
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     viewModel.toggleFavorite()
