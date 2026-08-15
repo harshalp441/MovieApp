@@ -45,12 +45,12 @@ struct DetailSkeletonView: View {
                         .rectangleShimmer(width: 50, height: 22, cornerRadius: 4)
                 }
 
-                // Genre Items - Rectangular Shimmers
-                HStack(spacing: 8) {
+                // Genre Items - Rectangular Shimmers (Flow Layout)
+                FlowLayout(horizontalSpacing: 8, verticalSpacing: 8) {
                     ForEach(0..<3, id: \.self) { _ in
                         Capsule()
                             .fill(Color(.systemGray5))
-                            .frame(width: 70, height: 28)
+                            .frame(width: 70, height: 24)
                             .shimmering()
                     }
                 }

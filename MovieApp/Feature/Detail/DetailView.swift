@@ -71,13 +71,11 @@ struct DetailView: View {
                             }
                         }
 
-                        // Genres
+                        // Genres (Wrapping Flow Layout)
                         if !details.genres.isEmpty {
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 8) {
-                                    ForEach(details.genres) { genre in
-                                        GenrePill(name: genre.name)
-                                    }
+                            FlowLayout(horizontalSpacing: 8, verticalSpacing: 8) {
+                                ForEach(details.genres) { genre in
+                                    GenrePill(name: genre.name)
                                 }
                             }
                         }
