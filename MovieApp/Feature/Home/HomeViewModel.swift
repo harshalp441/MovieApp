@@ -43,13 +43,6 @@ final class HomeViewModel {
         }
     }
 
-    func refresh() async {
-        if searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            await loadPopularMovies()
-        } else {
-            await search()
-        }
-    }
 
     func search() async {
         let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)

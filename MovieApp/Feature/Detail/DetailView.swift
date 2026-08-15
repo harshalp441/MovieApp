@@ -182,8 +182,5 @@ struct DetailView: View {
                 await viewModel.loadMovieDetails()
             }
         }
-        .refreshable {
-            await viewModel.loadMovieDetails()
-        }
     }
 }

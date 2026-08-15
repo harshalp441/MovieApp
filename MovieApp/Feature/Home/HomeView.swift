@@ -37,9 +37,6 @@ struct HomeView: View {
                         await viewModel.loadPopularMovies()
                     }
                 }
-                .refreshable {
-                    await viewModel.refresh()
-                }
                 .alert(
                     "Something went wrong",
                     isPresented: Binding(
