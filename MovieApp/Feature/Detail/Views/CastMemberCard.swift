@@ -41,7 +41,7 @@ struct CastMemberCard: View {
     @ViewBuilder
     private var imageContent: some View {
         if let url = TMDBImageHelper.profile(path: member.profilePath, width: 185) {
-            AsyncImage(url: url) { phase in
+            CachedAsyncImage(url: url) { phase in
                 switch phase {
                 case .success(let image):
                     image

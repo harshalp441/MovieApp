@@ -15,40 +15,33 @@ struct MovieRowSkeleton: View {
             RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .fill(Color(.systemGray5))
                 .frame(width: 75, height: 110)
+                .shimmering()
 
             // Content placeholder with fixed sizes
             VStack(alignment: .leading, spacing: 8) {
-                // Title lines
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(Color(.systemGray5))
-                    .frame(height: 16)
-                    .frame(maxWidth: .infinity)
+                // Title lines (Rectangular shimmers)
+                EmptyView()
+                    .rectangleShimmer(height: 16, cornerRadius: 4)
 
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(Color(.systemGray5))
-                    .frame(width: 130, height: 16)
+                EmptyView()
+                    .rectangleShimmer(width: 130, height: 16, cornerRadius: 4)
 
-                // Rating & Year Badges
+                // Rating & Year Badges with inline icons (Rectangular shimmers)
                 HStack(spacing: 12) {
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(Color(.systemGray5))
-                        .frame(width: 45, height: 14)
+                    EmptyView()
+                        .rectangleShimmer(width: 45, height: 14, cornerRadius: 4)
 
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(Color(.systemGray5))
-                        .frame(width: 50, height: 14)
+                    EmptyView()
+                        .rectangleShimmer(width: 50, height: 14, cornerRadius: 4)
                 }
                 .padding(.top, 2)
 
-                // Overview lines
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(Color(.systemGray6))
-                    .frame(height: 12)
-                    .frame(maxWidth: .infinity)
+                // Overview snippet lines (Rectangular shimmers)
+                EmptyView()
+                    .rectangleShimmer(height: 12, cornerRadius: 4, color: Color(.systemGray6))
 
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(Color(.systemGray6))
-                    .frame(width: 160, height: 12)
+                EmptyView()
+                    .rectangleShimmer(width: 160, height: 12, cornerRadius: 4, color: Color(.systemGray6))
 
                 Spacer(minLength: 0)
             }
@@ -59,9 +52,9 @@ struct MovieRowSkeleton: View {
             Circle()
                 .fill(Color(.systemGray5))
                 .frame(width: 22, height: 22)
+                .shimmering()
         }
         .padding(.vertical, 4)
-        .shimmering()
     }
 }
 

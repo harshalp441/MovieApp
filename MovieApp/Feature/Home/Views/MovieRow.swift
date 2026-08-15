@@ -66,7 +66,7 @@ struct MovieRow: View {
     @ViewBuilder
     private var posterContent: some View {
         if let url = TMDBImageHelper.poster(path: movie.posterPath, width: 185) {
-            AsyncImage(url: url) { phase in
+            CachedAsyncImage(url: url) { phase in
                 switch phase {
                 case .success(let image):
                     image

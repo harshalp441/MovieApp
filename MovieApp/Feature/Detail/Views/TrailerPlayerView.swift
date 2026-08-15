@@ -53,7 +53,7 @@ struct TrailerPlayerView: View {
     private var fallbackBackdropView: some View {
         ZStack {
             if let url = TMDBImageHelper.backdrop(path: backdropPath, width: 780) {
-                AsyncImage(url: url) { phase in
+                CachedAsyncImage(url: url) { phase in
                     switch phase {
                     case .success(let image):
                         image

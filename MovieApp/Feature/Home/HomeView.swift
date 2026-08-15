@@ -24,6 +24,8 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             content
+                .animation(.easeInOut(duration: 0.25), value: viewModel.movies)
+                .animation(.easeInOut(duration: 0.25), value: viewModel.isLoading)
                 .navigationTitle("Movies")
                 .navigationBarTitleDisplayMode(.large)
                 .searchable(
@@ -69,15 +71,18 @@ struct HomeView: View {
                 MovieRowSkeleton()
             }
             .listStyle(.plain)
+            .transition(.opacity)
         } else if let movies = viewModel.movies, movies.isEmpty {
             if !viewModel.searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 ContentUnavailableView.search(text: viewModel.searchText)
+                    .transition(.opacity)
             } else {
                 ContentUnavailableView(
                     "No Movies",
                     systemImage: "film",
                     description: Text("No movies available right now.")
                 )
+                .transition(.opacity)
             }
         } else {
             List(viewModel.movies ?? []) { movie in
@@ -100,6 +105,7 @@ struct HomeView: View {
                 }
             }
             .listStyle(.plain)
+            .transition(.opacity)
         }
     }
 }
