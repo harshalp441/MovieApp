@@ -21,14 +21,20 @@ struct HomeView: View {
         )
     }
 
+    private var isSearchable: Bool {
+        viewModel.movies != nil && viewModel.errorMessage == nil
+    }
+
     var body: some View {
         NavigationStack {
             content
                 .animation(.easeInOut(duration: 0.25), value: viewModel.movies)
                 .animation(.easeInOut(duration: 0.25), value: viewModel.isLoading)
+                .animation(.easeInOut(duration: 0.25), value: viewModel.errorMessage)
                 .navigationTitle("Movies")
                 .navigationBarTitleDisplayMode(.large)
-                .searchable(
+                .searchableIf(
+                    isSearchable,
                     text: $viewModel.searchText,
                     prompt: "Search movies"
                 )
@@ -36,27 +42,6 @@ struct HomeView: View {
                     if (viewModel.movies?.isEmpty ?? true) {
                         await viewModel.loadPopularMovies()
                     }
-                }
-                .alert(
-                    "Something went wrong",
-                    isPresented: Binding(
-                        get: {
-                            viewModel.errorMessage != nil
-                        },
-                        set: { value in
-                            if !value {
-                                viewModel.errorMessage = nil
-                            }
-                        }
-                    )
-                ) {
-                    Button("OK") {
-                        viewModel.errorMessage = nil
-                    }
-                } message: {
-                    Text(
-                        viewModel.errorMessage ?? ""
-                    )
                 }
         }
     }
@@ -68,6 +53,35 @@ struct HomeView: View {
                 MovieRowSkeleton()
             }
             .listStyle(.plain)
+            .transition(.opacity)
+        } else if let error = viewModel.errorMessage, (viewModel.movies?.isEmpty ?? true) {
+            VStack(spacing: 16) {
+                Image(systemName: "exclamationmark.triangle")
+                    .font(.system(size: 44))
+                    .foregroundColor(.orange)
+
+                Text("Failed to Load Movies")
+                    .font(.headline)
+
+                Text(error)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+
+                Button("Try Again") {
+                    Task {
+                        if !viewModel.searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                            await viewModel.search()
+                        } else {
+                            await viewModel.loadPopularMovies()
+                        }
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .padding(.top, 8)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .transition(.opacity)
         } else if let movies = viewModel.movies, movies.isEmpty {
             if !viewModel.searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -103,6 +117,23 @@ struct HomeView: View {
             }
             .listStyle(.plain)
             .transition(.opacity)
+        }
+    }
+}
+
+// MARK: - Conditional Searchable Helper
+
+private extension View {
+    @ViewBuilder
+    func searchableIf(
+        _ condition: Bool,
+        text: Binding<String>,
+        prompt: String
+    ) -> some View {
+        if condition {
+            self.searchable(text: text, prompt: prompt)
+        } else {
+            self
         }
     }
 }

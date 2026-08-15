@@ -56,8 +56,8 @@ The application follows **Clean Architecture** with a unidirectional data flow a
   - `Movie`, `MovieDetails`, `CastMember`, `Genre`, `Video`: Plain Swift `Codable` and `Identifiable` data models with computed helper formatters.
   - `MovieRepository`: Abstract data repository protocol and its concrete implementation `DefaultMovieRepository`.
 - **Feature Layer**:
-  - `Home`: `HomeViewModel` (keystroke debouncing, silent cancellations) and `HomeView` (animated search transitions, 4-item skeleton loading).
-  - `Detail`: `DetailViewModel` (instant title display, async details & trailer fetching) and `DetailView` (scroll-driven navigation title transition, 16:9 YouTube trailer embed, cast carousel, error retry action).
+  - `Home`: `HomeViewModel` (keystroke debouncing, silent cancellations) and `HomeView` (animated search transitions, 4-item skeleton loading, inline "Try Again" error card).
+  - `Detail`: `DetailViewModel` (instant title display, async details & trailer fetching) and `DetailView` (scroll-driven navigation title transition, 16:9 YouTube trailer embed, cast carousel, inline "Try Again" error card).
 
 ---
 
@@ -66,9 +66,10 @@ The application follows **Clean Architecture** with a unidirectional data flow a
 ### 1. Popular Movies Feed
 - Fetches and displays popular movies from TMDb on view appearance.
 - Renders high-quality cached poster cards, movie title, star rating badge, and release year.
+- **Inline Error Handling**: Replaces disruptive alert popups with a centered "Try Again" retry card on network failure.
 
 ### 2. Real-Time Debounced Search
-- Integrated native `.searchable` search bar.
+- Integrated native `.searchable` search bar, displayed once movies are successfully loaded.
 - **350ms Keystroke Debouncing**: Cancels previous in-flight network tasks as the user types.
 - **Silent Cancellation**: Discarded search requests do not trigger disruptive error alerts.
 - **Smooth Result Animations**: `.animation(.easeInOut(duration: 0.25))` ensures fluid row insertions, deletions, and state cross-fades between results and empty states.
@@ -84,7 +85,7 @@ The application follows **Clean Architecture** with a unidirectional data flow a
 - **Backdrop Fallback**: Displays the wide backdrop image if no trailer is available.
 - **Dynamic Multi-Line Wrapping Genre Chips**: Uses custom `FlowLayout` to automatically wrap chips onto new lines without horizontal clipping or scrollbars.
 - **Storyline & Cast Carousel**: Displays plot summary and a horizontal scrollable cast list with fixed-size photo cards and tight 2pt typography spacing.
-- **Error State Handling**: Clear error card with a dedicated "Try Again" retry action.
+- **Error State Handling**: Clear inline error card with a dedicated "Try Again" retry action.
 
 ### 5. Interactive Scroll-Driven Navigation Title
 - Powered by Apple's native `.onScrollGeometryChange(for:of:action:)` API.
