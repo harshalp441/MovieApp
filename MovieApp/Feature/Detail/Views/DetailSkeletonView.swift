@@ -65,8 +65,8 @@ struct DetailSkeletonView: View {
 
                 if let overview = initialMovie?.overview, !overview.isEmpty {
                     Text(overview)
-                        .font(.body)
-                        .foregroundColor(.secondary)
+                        .font(.subheadline)
+                        .foregroundColor(.primary)
                         .lineSpacing(4)
                 } else {
                     VStack(alignment: .leading, spacing: 6) {

@@ -91,8 +91,8 @@ struct DetailView: View {
                                 .foregroundColor(.primary)
 
                             Text(overview)
-                                .font(.body)
-                                .foregroundColor(.secondary)
+                                .font(.subheadline)
+                                .foregroundColor(.primary)
                                 .lineSpacing(4)
                         }
                         .padding(.horizontal)
