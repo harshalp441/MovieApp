@@ -20,7 +20,7 @@ The app uses TMDb API v3. An API key is pre-configured in [`NetworkEndpoint.swif
 ```swift
 // MovieApp/Core/Network/NetworkEndpoint.swift
 var APIKey: String {
-    "0a45c058ffff0ff4fa6c3a9c73bd38d9" // Replace with your own TMDb API key if desired
+    "**********************" // Replace with your own TMDb API key if desired
 }
 ```
 
